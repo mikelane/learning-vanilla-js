@@ -1,3 +1,5 @@
+import ItemDragState from './item-drag-state';
+
 interface ItemParams {
   id: string;
   title: string;
@@ -109,16 +111,17 @@ const insertItemsIntoSwimlanes = async (allItems: itemsResponse) => {
 const items = JSON.parse(itemsGqlResponse);
 insertItemsIntoSwimlanes(items);
 
-let hoverEl: HTMLElement | null | undefined = null;
-let currentItem: HTMLElement | null = null;
-let startingPos: HTMLElement | null = null;
+const hoverEl: HTMLElement | null | undefined = null;
+const currentItem: HTMLElement | null = null;
+const startingPos: HTMLElement | null = null;
 
 const mdHandler = (e: Event): void => {
+  const itemDragState = ItemDragState.instance;
   const el = e.currentTarget as HTMLElement;
-  currentItem = el;
+  itemDragState.currentItem = el;
   const body = document.querySelector('.content') as HTMLElement;
   const oldParent = el.parentElement as HTMLElement;
-  startingPos = oldParent;
+  itemDragState.startingSwimlane = oldParent;
   oldParent.removeChild(el);
   body.appendChild(el);
   el!.style.background = '#aaa';
@@ -128,30 +131,31 @@ const mdHandler = (e: Event): void => {
 };
 
 const muHandler = (e: Event): void => {
-  const el = currentItem;
+  const itemDragState = ItemDragState.instance;
+  const el = itemDragState.currentItem;
   const body = document.querySelector('.content') as HTMLElement;
-  if (hoverEl?.className === 'items') {
+  if (itemDragState.hoverElement?.className === 'items') {
     body.removeChild(el!);
-    hoverEl?.appendChild(el!);
+    itemDragState.hoverElement?.appendChild(el!);
     el!.style.position = '';
-  } else if (hoverEl?.className === 'item') {
+  } else if (itemDragState.hoverElement?.className === 'item') {
     body.removeChild(el!);
-    hoverEl?.parentElement?.parentElement?.appendChild(el!);
+    itemDragState.hoverElement?.parentElement?.parentElement?.appendChild(el!);
     el!.style.position = '';
   }
   if (el!.parentElement?.className === 'content') {
     body.removeChild(el!);
-    startingPos?.appendChild(el!);
+    itemDragState.startingSwimlane?.appendChild(el!);
   }
   el!.style.transform = 'rotate(0deg)';
   el!.style.position = '';
-  currentItem = null;
+  itemDragState.clearItem();
 };
 
 const mouseMoveHandler = (e: MouseEvent) => {
-  const el = currentItem;
-  console.log(el);
-  if (el !== null) {
+  const itemDragState = ItemDragState.instance;
+  const el = itemDragState.currentItem;
+  if (el) {
     el!.style.background = '#aaa';
     el!.style.borderRadius = '10px';
     el!.style.top = e.pageY + 20 + 'px';
@@ -160,16 +164,21 @@ const mouseMoveHandler = (e: MouseEvent) => {
 };
 
 const hoverHandler = (e: MouseEvent) => {
-  hoverEl = e.target as HTMLElement;
+  const itemDragState = ItemDragState.instance;
+  itemDragState.hoverElement = e.target as HTMLElement;
   if (
-    hoverEl?.className === 'title' ||
-    hoverEl?.className === 'details' ||
-    hoverEl?.className === 'assignee'
+    itemDragState.hoverElement?.className === 'title' ||
+    itemDragState.hoverElement?.className === 'details' ||
+    itemDragState.hoverElement?.className === 'assignee'
   ) {
-    hoverEl = hoverEl?.parentElement?.parentElement;
+    itemDragState.hoverElement = itemDragState.hoverElement!.parentElement!
+      .parentElement as HTMLElement;
   }
-  if (hoverEl!.className === 'items' && currentItem !== null) {
-    hoverEl!.style.background = '#555';
+  if (
+    itemDragState.hoverElement!.className === 'items' &&
+    itemDragState.currentItem !== null
+  ) {
+    itemDragState.hoverElement!.style.background = '#555';
   }
 };
 
