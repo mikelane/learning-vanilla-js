@@ -97,7 +97,7 @@ const mdHandler = (e) => {
     el.style.transform = 'rotate(15deg)';
 };
 const muHandler = (e) => {
-    var _a;
+    var _a, _b, _c;
     const el = currentItem;
     const body = document.querySelector('.content');
     if ((hoverEl === null || hoverEl === void 0 ? void 0 : hoverEl.className) === 'items') {
@@ -107,18 +107,20 @@ const muHandler = (e) => {
     }
     else if ((hoverEl === null || hoverEl === void 0 ? void 0 : hoverEl.className) === 'item') {
         body.removeChild(el);
-        (_a = hoverEl === null || hoverEl === void 0 ? void 0 : hoverEl.parentElement) === null || _a === void 0 ? void 0 : _a.appendChild(el);
+        (_b = (_a = hoverEl === null || hoverEl === void 0 ? void 0 : hoverEl.parentElement) === null || _a === void 0 ? void 0 : _a.parentElement) === null || _b === void 0 ? void 0 : _b.appendChild(el);
         el.style.position = '';
     }
-    else {
+    if (((_c = el.parentElement) === null || _c === void 0 ? void 0 : _c.className) === 'content') {
         body.removeChild(el);
-        startingPos === null || startingPos === void 0 ? void 0 : startingPos.appendChild(currentItem);
+        startingPos === null || startingPos === void 0 ? void 0 : startingPos.appendChild(el);
     }
     el.style.transform = 'rotate(0deg)';
+    el.style.position = '';
     currentItem = null;
 };
 const mouseMoveHandler = (e) => {
     const el = currentItem;
+    console.log(el);
     if (el !== null) {
         el.style.background = '#aaa';
         el.style.borderRadius = '10px';
@@ -127,7 +129,13 @@ const mouseMoveHandler = (e) => {
     }
 };
 const hoverHandler = (e) => {
+    var _a;
     hoverEl = e.target;
+    if ((hoverEl === null || hoverEl === void 0 ? void 0 : hoverEl.className) === 'title' ||
+        (hoverEl === null || hoverEl === void 0 ? void 0 : hoverEl.className) === 'details' ||
+        (hoverEl === null || hoverEl === void 0 ? void 0 : hoverEl.className) === 'assignee') {
+        hoverEl = (_a = hoverEl === null || hoverEl === void 0 ? void 0 : hoverEl.parentElement) === null || _a === void 0 ? void 0 : _a.parentElement;
+    }
     if (hoverEl.className === 'items' && currentItem !== null) {
         hoverEl.style.border = '1px solid green';
     }

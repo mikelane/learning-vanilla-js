@@ -24,7 +24,7 @@ declare const itemMouseUp: (e: Event) => void;
 declare const itemHtml: ({ id, title, details, assignee }: Item) => string;
 declare const insertItemsIntoSwimlanes: (allItems: itemsResponse) => Promise<void>;
 declare const items: any;
-declare let hoverEl: HTMLElement | null;
+declare let hoverEl: HTMLElement | null | undefined;
 declare let currentItem: HTMLElement | null;
 declare let startingPos: HTMLElement | null;
 declare const mdHandler: (e: Event) => void;
