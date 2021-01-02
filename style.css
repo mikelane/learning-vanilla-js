@@ -52,6 +52,7 @@ body {
   font-size: 24pt;
   text-align: center;
   color: #ccc;
+  user-select: none;
 }
 .board .swimlane .items {
   position: absolute;
@@ -67,6 +68,7 @@ body {
   background: #aaa;
   padding: 10px;
   margin: 15px;
+  user-select: none;
 }
 .board .swimlane .items .item .title {
   font-size: 16pt;
