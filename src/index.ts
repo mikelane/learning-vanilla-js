@@ -109,7 +109,7 @@ const insertItemsIntoSwimlanes = async (allItems: itemsResponse) => {
 const items = JSON.parse(itemsGqlResponse);
 insertItemsIntoSwimlanes(items);
 
-let hoverEl: HTMLElement | null = null;
+let hoverEl: HTMLElement | null | undefined = null;
 let currentItem: HTMLElement | null = null;
 let startingPos: HTMLElement | null = null;
 
@@ -136,18 +136,21 @@ const muHandler = (e: Event): void => {
     el!.style.position = '';
   } else if (hoverEl?.className === 'item') {
     body.removeChild(el!);
-    hoverEl?.parentElement?.appendChild(el!);
+    hoverEl?.parentElement?.parentElement?.appendChild(el!);
     el!.style.position = '';
-  } else {
+  }
+  if (el!.parentElement?.className === 'content') {
     body.removeChild(el!);
-    startingPos?.appendChild(currentItem!);
+    startingPos?.appendChild(el!);
   }
   el!.style.transform = 'rotate(0deg)';
+  el!.style.position = '';
   currentItem = null;
 };
 
 const mouseMoveHandler = (e: MouseEvent) => {
   const el = currentItem;
+  console.log(el);
   if (el !== null) {
     el!.style.background = '#aaa';
     el!.style.borderRadius = '10px';
@@ -158,8 +161,15 @@ const mouseMoveHandler = (e: MouseEvent) => {
 
 const hoverHandler = (e: MouseEvent) => {
   hoverEl = e.target as HTMLElement;
-  if (hoverEl.className === 'items' && currentItem !== null) {
-    hoverEl.style.border = '1px solid green';
+  if (
+    hoverEl?.className === 'title' ||
+    hoverEl?.className === 'details' ||
+    hoverEl?.className === 'assignee'
+  ) {
+    hoverEl = hoverEl?.parentElement?.parentElement;
+  }
+  if (hoverEl!.className === 'items' && currentItem !== null) {
+    hoverEl!.style.border = '1px solid green';
   }
 };
 

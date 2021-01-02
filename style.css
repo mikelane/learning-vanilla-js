@@ -48,7 +48,7 @@ body {
   margin: 10px;
   position: relative;
 }
-.board .swimlane > .title {
+.board .swimlane > .laneTitle {
   font-size: 24pt;
   text-align: center;
   color: #ccc;
