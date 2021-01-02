@@ -61,7 +61,7 @@ const itemHtml = ({ id, title, details, assignee }) => {
     const assigneeP = assignee
         ? `<p class="assignee">Assigned to: ${assignee}</p>`
         : '';
-    return `<div id=${id} class="item" onmousedown="itemMouseDown(event)" onmouseup="itemMouseUp(event)">
+    return `<div id=${id} class="item" onmousedown="mdHandler(event)" onmouseup="muHandler(event)">
   <h1 class="title">${title}</h1>
   <p class="details">${details}</p>
   ${assigneeP}
@@ -80,4 +80,62 @@ const insertItemsIntoSwimlanes = async (allItems) => {
 };
 const items = JSON.parse(itemsGqlResponse);
 insertItemsIntoSwimlanes(items);
+let hoverEl = null;
+let currentItem = null;
+let startingPos = null;
+const mdHandler = (e) => {
+    const el = e.currentTarget;
+    currentItem = el;
+    const body = document.querySelector('.content');
+    const oldParent = el.parentElement;
+    startingPos = oldParent;
+    oldParent.removeChild(el);
+    body.appendChild(el);
+    el.style.background = '#aaa';
+    el.style.borderRadius = '10px';
+    el.style.position = 'absolute';
+    el.style.transform = 'rotate(15deg)';
+};
+const muHandler = (e) => {
+    var _a;
+    const el = currentItem;
+    const body = document.querySelector('.content');
+    if ((hoverEl === null || hoverEl === void 0 ? void 0 : hoverEl.className) === 'items') {
+        body.removeChild(el);
+        hoverEl === null || hoverEl === void 0 ? void 0 : hoverEl.appendChild(el);
+        el.style.position = '';
+    }
+    else if ((hoverEl === null || hoverEl === void 0 ? void 0 : hoverEl.className) === 'item') {
+        body.removeChild(el);
+        (_a = hoverEl === null || hoverEl === void 0 ? void 0 : hoverEl.parentElement) === null || _a === void 0 ? void 0 : _a.appendChild(el);
+        el.style.position = '';
+    }
+    else {
+        body.removeChild(el);
+        startingPos === null || startingPos === void 0 ? void 0 : startingPos.appendChild(currentItem);
+    }
+    el.style.transform = 'rotate(0deg)';
+    currentItem = null;
+};
+const mouseMoveHandler = (e) => {
+    const el = currentItem;
+    if (el !== null) {
+        el.style.background = '#aaa';
+        el.style.borderRadius = '10px';
+        el.style.top = e.pageY + 20 + 'px';
+        el.style.left = e.pageX + 20 + 'px';
+    }
+};
+const hoverHandler = (e) => {
+    hoverEl = e.target;
+    if (hoverEl.className === 'items' && currentItem !== null) {
+        hoverEl.style.border = '1px solid green';
+    }
+};
+const normalBorder = (e) => {
+    e.currentTarget.style.border = 'none';
+};
+document.addEventListener('mouseup', muHandler);
+document.addEventListener('mousemove', mouseMoveHandler);
+document.addEventListener('mouseover', hoverHandler);
 //# sourceMappingURL=index.js.map
