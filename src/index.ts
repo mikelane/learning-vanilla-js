@@ -169,12 +169,12 @@ const hoverHandler = (e: MouseEvent) => {
     hoverEl = hoverEl?.parentElement?.parentElement;
   }
   if (hoverEl!.className === 'items' && currentItem !== null) {
-    hoverEl!.style.border = '1px solid green';
+    hoverEl!.style.background = '#555';
   }
 };
 
 const normalBorder = (e: Event) => {
-  (e.currentTarget as HTMLElement).style.border = 'none';
+  (e.currentTarget as HTMLElement).style.background = '#333';
 };
 
 document.addEventListener('mouseup', muHandler);

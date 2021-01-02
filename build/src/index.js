@@ -137,11 +137,11 @@ const hoverHandler = (e) => {
         hoverEl = (_a = hoverEl === null || hoverEl === void 0 ? void 0 : hoverEl.parentElement) === null || _a === void 0 ? void 0 : _a.parentElement;
     }
     if (hoverEl.className === 'items' && currentItem !== null) {
-        hoverEl.style.border = '1px solid green';
+        hoverEl.style.background = '#555';
     }
 };
 const normalBorder = (e) => {
-    e.currentTarget.style.border = 'none';
+    e.currentTarget.style.background = '#333';
 };
 document.addEventListener('mouseup', muHandler);
 document.addEventListener('mousemove', mouseMoveHandler);
